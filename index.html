@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Office Navigation System</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <h1>Office Navigation System</h1>
+    </header>
+
+    <main>
+        <div class="search-container">
+            <input type="text" id="search-bar" placeholder="Type your query here...">
+            <button id="search-button">
+                <img src="search-icon.png" alt="Search Icon">
+            </button>
+        </div>
+        <div id="output"></div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024. Matric No: 214857 for University of Ibadan Registry</p>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script>
+        document.getElementById('search-button').addEventListener('click', handleSearch);
+    
+        async function handleSearch() {
+            const query = document.getElementById('search-bar').value;
+            const output = document.getElementById('output');
+    
+            // Send the query to the backend
+            const response = await fetch('/search', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `query=${encodeURIComponent(query)}`,
+            });
+    
+            // Get the result and display it
+            const data = await response.json();
+            output.textContent = data.response;
+        }
+    </script>
+</body>
+</html>
