@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Search Results | UI Registry</title>
+  <!-- Tailwind CSS (via CDN for demo) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+  <!-- NAVIGATION BAR (similar to your screenshot) -->
+  <nav class="bg-white shadow">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+      <!-- Logo + Title -->
+      <div class="flex items-center space-x-4">
+        <img 
+          src="https://via.placeholder.com/80x80?text=Logo" 
+          alt="UI Logo" 
+          class="h-10 w-auto"
+        />
+        <span class="font-semibold text-base md:text-xl">
+          University of Ibadan Registry <br class="hidden md:block"/>
+          Office Navigation System
+        </span>
+      </div>
+      <!-- Right: Buttons -->
+      <div class="flex items-center space-x-4">
+        <button class="text-blue-600 font-medium hover:text-blue-800 transition-colors">
+          Scan QR Code
+        </button>
+        <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors">
+          Login
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO / HEADER SECTION -->
+  <header 
+    class="relative bg-cover bg-center h-60 md:h-80" 
+    style="background-image: url('https://via.placeholder.com/1200x600?text=Background+Image');">
+    <!-- Dark overlay -->
+    <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+    <div 
+      class="relative z-10 flex flex-col justify-center items-center text-center h-full text-white px-4">
+      <h1 id="searchHeading" class="text-2xl md:text-4xl font-bold mb-4">
+        Your Search Results for "<span id="searchQuery"></span>"
+      </h1>
+      <!-- (Optional) Another search bar here if desired -->
+      <div class="hidden md:block w-full max-w-xl">
+        <!-- You could place a search input here, but let's keep it simple -->
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT: SEARCH RESULTS LIST -->
+  <main class="max-w-7xl mx-auto px-4 py-6">
+    <!-- "Back" link or arrow -->
+    <div class="mb-4">
+      <a href="index.html" class="text-blue-600 hover:underline flex items-center">
+        <!-- Simple back arrow icon -->
+        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" stroke-width="2"
+          viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 18l-6-6 6-6"></path>
+        </svg>
+        Back to Search
+      </a>
+    </div>
+
+    <div id="resultsContainer" class="space-y-4">
+      <!-- Results will be inserted here by JS -->
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-gray-800 text-gray-200 py-4">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0">
+      <p class="text-sm">
+        &copy; 2025. Matric No: 214857 for University of Ibadan Registry
+      </p>
+      <p class="text-sm">
+        Go to 
+        <a 
+          href="https://www.ui.edu.ng" 
+          target="_blank" 
+          class="text-blue-400 hover:underline ml-1">
+          www.ui.edu.ng
+        </a>
+      </p>
+    </div>
+  </footer>
+
+  <!-- SCRIPT: Fetch & Display Results -->
+  <script>
+    // 1. Grab the 'search' parameter from the URL
+    const params = new URLSearchParams(window.location.search);
+    const query = params.get('search') || '';
+
+    // 2. Update the heading text
+    document.getElementById('searchQuery').textContent = query;
+
+    // 3. Fetch the JSON file
+    fetch('offices.json')
+      .then(response => response.json())
+      .then(data => {
+        // 4. Filter the data based on the search query
+        //    (In this example, we match against the 'name' or 'description')
+        const filteredResults = data.filter(item => {
+          const combinedText = (item.name + ' ' + item.description).toLowerCase();
+          return combinedText.includes(query.toLowerCase());
+        });
+
+        // 5. Display the filtered results
+        const container = document.getElementById('resultsContainer');
+        container.innerHTML = ''; // Clear any existing content
+
+        if (filteredResults.length === 0) {
+          // No matches
+          const noResultDiv = document.createElement('div');
+          noResultDiv.className = 'p-4 bg-yellow-50 border border-yellow-200 rounded';
+          noResultDiv.textContent = 'No matching offices or services found.';
+          container.appendChild(noResultDiv);
+        } else {
+          // Render each matching item as a card
+          filteredResults.forEach(office => {
+            const card = document.createElement('div');
+            card.className = 'bg-white shadow rounded p-4 md:p-6 flex flex-col md:flex-row justify-between';
+
+            // Left side: Office info
+            card.innerHTML = `
+              <div>
+                <h2 class="text-xl font-semibold mb-2">${office.name}</h2>
+                <p class="mb-1">${office.description}</p>
+                <p class="text-gray-700 mb-1"><strong>Location:</strong> ${office.location}</p>
+                <p class="text-gray-700 mb-1"><strong>Contact:</strong> ${office.contact}</p>
+                <p class="text-gray-700 mb-1"><strong>Email:</strong> ${office.email}</p>
+              </div>
+              <!-- Right side: A "Navigate me there" or CTA button -->
+              <div class="mt-4 md:mt-0 md:ml-4 flex items-center">
+                <button
+                  class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
+                >
+                  Navigate me there
+                </button>
+              </div>
+            `;
+
+            container.appendChild(card);
+          });
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching JSON:', error);
+      });
+  </script>
+</body>
+</html>
