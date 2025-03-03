@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Panel - UI Registry Office Navigation System</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+  <!-- Header -->
+  <header class="bg-blue-600 text-white p-4 flex justify-between items-center">
+    <h1 class="text-xl font-bold">Admin Panel</h1>
+    <button id="logoutButton" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded">
+      Logout
+    </button>
+  </header>
+
+  <!-- Main Content -->
+  <div class="max-w-7xl mx-auto p-4">
+    <div class="flex flex-col md:flex-row gap-4">
+      <!-- Add New Office Form -->
+      <div class="bg-white p-4 rounded shadow md:w-1/2">
+        <h2 class="text-lg font-semibold mb-4">Add New Office</h2>
+        <form id="addOfficeForm" class="space-y-4">
+          <div>
+            <label class="block text-gray-700">Name:</label>
+            <input type="text" id="officeName" class="w-full border rounded px-2 py-1" required>
+          </div>
+          <div>
+            <label class="block text-gray-700">Description:</label>
+            <textarea id="officeDescription" class="w-full border rounded px-2 py-1" required></textarea>
+          </div>
+          <div>
+            <label class="block text-gray-700">Location:</label>
+            <input type="text" id="officeLocation" class="w-full border rounded px-2 py-1">
+          </div>
+          <div>
+            <label class="block text-gray-700">Contact:</label>
+            <input type="text" id="officeContact" class="w-full border rounded px-2 py-1">
+          </div>
+          <div>
+            <label class="block text-gray-700">Email:</label>
+            <input type="email" id="officeEmail" class="w-full border rounded px-2 py-1">
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-gray-700">Latitude:</label>
+              <input type="number" id="officeLatitude" class="w-full border rounded px-2 py-1" step="any">
+            </div>
+            <div>
+              <label class="block text-gray-700">Longitude:</label>
+              <input type="number" id="officeLongitude" class="w-full border rounded px-2 py-1" step="any">
+            </div>
+          </div>
+          <div>
+            <label class="block text-gray-700">Image URL:</label>
+            <input type="url" id="officeImage" class="w-full border rounded px-2 py-1">
+          </div>
+          <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors">
+            Add Office
+          </button>
+        </form>
+      </div>
+
+      <!-- Offices List -->
+      <div class="bg-white p-4 rounded shadow md:w-1/2">
+        <h2 class="text-lg font-semibold mb-4">Offices</h2>
+        <table class="w-full table-auto border-collapse">
+          <thead>
+            <tr>
+              <th class="border px-2 py-1">Name</th>
+              <th class="border px-2 py-1">Location</th>
+              <th class="border px-2 py-1">Contact</th>
+              <th class="border px-2 py-1">Email</th>
+              <th class="border px-2 py-1">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="officesTableBody">
+            <!-- Office rows will be dynamically inserted here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Check if the user is logged in
+    if (localStorage.getItem('isLoggedIn') !== 'true') {
+      window.location.href = 'login.html';
+    }
+
+    // Logout button functionality
+    document.getElementById('logoutButton').addEventListener('click', () => {
+      localStorage.removeItem('isLoggedIn');
+      window.location.href = 'login.html';
+    });
+
+    // Initialize offices data from local storage or start with an empty array
+    let offices = JSON.parse(localStorage.getItem('offices')) || [];
+
+    function renderOffices() {
+      const tableBody = document.getElementById('officesTableBody');
+      tableBody.innerHTML = '';
+      offices.forEach((office, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td class="border px-2 py-1">${office.name}</td>
+          <td class="border px-2 py-1">${office.location || ''}</td>
+          <td class="border px-2 py-1">${office.contact || ''}</td>
+          <td class="border px-2 py-1">${office.email || ''}</td>
+          <td class="border px-2 py-1">
+            <button onclick="editOffice(${index})" class="bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded">
+              Edit
+            </button>
+            <button onclick="deleteOffice(${index})" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded">
+              Delete
+            </button>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    renderOffices();
+
+    // Handle the Add Office form submission
+    document.getElementById('addOfficeForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const newOffice = {
+        name: document.getElementById('officeName').value,
+        description: document.getElementById('officeDescription').value,
+        location: document.getElementById('officeLocation').value,
+        contact: document.getElementById('officeContact').value,
+        email: document.getElementById('officeEmail').value,
+        latitude: parseFloat(document.getElementById('officeLatitude').value) || null,
+        longitude: parseFloat(document.getElementById('officeLongitude').value) || null,
+        image: document.getElementById('officeImage').value
+      };
+
+      offices.push(newOffice);
+      localStorage.setItem('offices', JSON.stringify(offices));
+      renderOffices();
+      this.reset();
+    });
+
+    // Edit office (using a simple prompt for demonstration)
+    function editOffice(index) {
+      const office = offices[index];
+      const newName = prompt("Edit Office Name:", office.name);
+      if(newName !== null) {
+        office.name = newName;
+        offices[index] = office;
+        localStorage.setItem('offices', JSON.stringify(offices));
+        renderOffices();
+      }
+    }
+
+    // Delete office
+    function deleteOffice(index) {
+      if(confirm("Are you sure you want to delete this office?")) {
+        offices.splice(index, 1);
+        localStorage.setItem('offices', JSON.stringify(offices));
+        renderOffices();
+      }
+    }
+  </script>
+</body>
+</html>
