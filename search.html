@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>UI Registry Office Navigation System</title>
+  <!-- Tailwind CSS (via CDN for demo) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+  <!-- Simple Header -->
+  <header class="bg-white shadow p-4">
+    <h1 class="text-xl font-semibold">University of Ibadan Registry Office Navigation System</h1>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-xl mx-auto mt-8 px-4">
+    <h2 class="text-lg font-semibold mb-4">Search for an office or service</h2>
+    <div class="flex">
+      <input 
+        id="searchInput" 
+        type="text" 
+        placeholder="e.g. Transcripts, Records, Admissions..."
+        class="flex-grow p-2 border border-gray-300 rounded-l focus:outline-none"
+      />
+      <button 
+        id="searchButton" 
+        class="bg-blue-600 text-white px-4 py-2 rounded-r hover:bg-blue-700 transition-colors">
+        Search
+      </button>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-gray-200 py-4 mt-8 text-center">
+    &copy; 2025. Matric No: 214857 for University of Ibadan Registry
+  </footer>
+
+  <!-- JavaScript to redirect -->
+  <script>
+    const searchButton = document.getElementById('searchButton');
+    searchButton.addEventListener('click', () => {
+      const query = document.getElementById('searchInput').value.trim();
+      // Redirect to results page, passing the query as a URL parameter
+      window.location.href = 'results.html?search=' + encodeURIComponent(query);
+    });
+  </script>
+</body>
+</html>
