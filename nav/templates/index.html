@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  {% load static %}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UI Registry Office Navigation System</title>
+  <!-- Tailwind CSS via CDN (for demo) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+  <!-- NAVIGATION BAR -->
+  {% include 'navbar.html' %}
+  <!-- HERO / HEADER SECTION -->
+  <header class="relative bg-cover bg-center h-64" style="background-image: url('{% static "images/image.png" %}');">
+
+    <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+    <div class="relative z-10 flex flex-col justify-center items-center text-center h-full text-white px-4">
+      <h1 class="text-3xl md:text-4xl font-bold mb-4">
+        Find your way around the Registry with ease
+      </h1>
+      <!-- Search bar -->
+      <div class="w-full max-w-xl">
+        <div class="flex items-center bg-white rounded overflow-hidden shadow">
+          <input id="searchInput" type="text" placeholder="Search for an office or service..."
+            class="flex-grow px-4 py-2 focus:outline-none text-gray-800" />
+          <button id="searchButton" class="bg-blue-600 text-white px-4 py-2 hover:bg-blue-700 transition-colors">
+            Search
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- SEARCH RESULTS SECTION -->
+  <section id="searchResultsSection" class="py-8 hidden">
+    <div class="max-w-7xl mx-auto px-4">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-800">Search Results</h2>
+      <div id="resultsContainer" class="space-y-4">
+        <!-- Matching offices will be rendered here -->
+      </div>
+    </div>
+  </section>
+
+  <!-- DIRECTIONS SECTION -->
+  <section id="directionsSection" class="py-8 hidden">
+    <div class="max-w-7xl mx-auto px-4">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-800">Navigation Direction</h2>
+      <!-- Map container for Google Maps -->
+      <div id="map" class="mb-4 w-full max-w-md mx-auto rounded shadow" style="height: 400px;"></div>
+      <!-- Step-by-step instructions container -->
+      <div id="directionInstructions" class="space-y-2 text-gray-800">
+        <!-- Directions steps will be injected here -->
+      </div>
+    </div>
+  </section>
+
+  <!-- QUICK LINKS SECTION -->
+  <!-- QUICK LINKS SECTION -->
+  <section class="py-8 bg-white">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 text-center">
+        <a href="#" class="quick-link hover:bg-gray-100 rounded py-4 transition-colors" data-query="Transcripts">
+          <span class="block text-blue-600 font-semibold">Transcripts</span>
+        </a>
+        <a href="#" class="quick-link hover:bg-gray-100 rounded py-4 transition-colors" data-query="Verification">
+          <span class="block text-blue-600 font-semibold">Verification</span>
+        </a>
+        <a href="#" class="quick-link hover:bg-gray-100 rounded py-4 transition-colors"
+          data-query="Undergraduate Admissions">
+          <span class="block text-blue-600 font-semibold">
+            Undergraduate Admissions
+          </span>
+        </a>
+        <a href="#" class="quick-link hover:bg-gray-100 rounded py-4 transition-colors" data-query="PG Admissions">
+          <span class="block text-blue-600 font-semibold">PG Admissions</span>
+        </a>
+        <a href="#" class="quick-link hover:bg-gray-100 rounded py-4 transition-colors"
+          data-query="Exams &amp; Records">
+          <span class="block text-blue-600 font-semibold">Exams &amp; Records</span>
+        </a>
+        <a href="#" class="quick-link hover:bg-gray-100 rounded py-4 transition-colors" data-query="Others">
+          <span class="block text-blue-600 font-semibold">Others</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- INFO SECTION -->
+  <section class="py-8">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex flex-col md:flex-row items-center space-y-6 md:space-y-0 md:space-x-8">
+        <!-- Image -->
+        <div class="md:w-1/2">
+          <img src="{% static 'images/ui_image_registry.png' %}" alt="UI Registry Building"
+            class="rounded shadow w-full" />
+        </div>
+
+        <!-- Text -->
+        <div class="md:w-1/2">
+          <h2 class="text-2xl md:text-3xl font-bold mb-4">
+            Welcome to the University of Ibadan Registry Office Navigation System
+          </h2>
+          <p class="mb-4 text-gray-700">
+            Easily find offices and services within the Registry
+            to get the assistance you need. You can browse through
+            available services, locate offices, and more.
+          </p>
+          <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors">
+            View All News from UI Registry
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="bg-gray-800 text-gray-200 py-4">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0">
+      <p class="text-sm">
+        &copy; 2025. Matric No: 214857 for University of Ibadan Registry
+      </p>
+      <p class="text-sm">
+        Go to
+        <a href="https://www.ui.edu.ng" target="_blank" class="text-blue-400 hover:underline ml-1">
+          www.ui.edu.ng
+        </a>
+      </p>
+    </div>
+  </footer>
+
+  <!-- JavaScript Section -->
+  <script>
+    let officesData = {{ offices_json| safe }};
+
+    // Helper function to get the CSRF token from cookies
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          // Check if this cookie string begins with the name we want
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+
+    // Function to perform the search and render results
+    function performSearch() {
+      // Get the search query and convert it to lowercase for consistency
+      const query = document.getElementById('searchInput').value.trim().toLowerCase();
+      const resultsContainer = document.getElementById('resultsContainer');
+      const searchResultsSection = document.getElementById('searchResultsSection');
+
+      // Clear any previous results
+      resultsContainer.innerHTML = '';
+
+      // Alert if no query is entered
+      if (!query) {
+        alert('Please enter a search term');
+        return;
+      }
+
+      // Determine the results: if query is "others", show all offices; otherwise, filter
+      let filteredResults;
+      if (query === "others") {
+        filteredResults = officesData;
+      } else {
+        filteredResults = officesData.filter(item => {
+          const combinedText = (item.name + ' ' + item.description).toLowerCase();
+          return combinedText.includes(query);
+        });
+      }
+
+      // Show the results section
+      searchResultsSection.classList.remove('hidden');
+
+      // If no matching results, display a message
+      if (filteredResults.length === 0) {
+        resultsContainer.innerHTML = `
+          <div class="p-4 bg-yellow-50 border border-yellow-200 rounded">
+            No matching offices or services found.
+          </div>
+        `;
+        {% if user.is_authenticated %}
+        fetch("{% url 'store_search' %}", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "X-CSRFToken": getCookie('csrftoken')
+          },
+          body: new URLSearchParams({
+            "query": query
+          })
+        })
+          .then(response => response.json())
+          .then(data => console.log("Search stored:", data))
+          .catch(error => console.error("Error storing search query:", error));
+        {% else %}
+        console.log("User is not authenticated; search not stored.");
+        {% endif %}
+        return;
+      }
+
+      // Render each matching office as a card
+      filteredResults.forEach(office => {
+        const card = document.createElement('div');
+        card.className = 'bg-white shadow rounded p-4 md:p-6 flex flex-col md:flex-row';
+        let imageHTML = '';
+        if (office.image) {
+          imageHTML = `
+            <img 
+              src="${office.image}"  
+              alt="${office.name}" 
+              class="w-16 h-16 object-cover mr-4 rounded mb-4 md:mb-0"
+            />
+          `;
+        }
+        card.innerHTML = `
+          ${imageHTML}
+          <div class="flex-grow">
+            <h3 class="text-xl font-semibold mb-2">${office.name}</h3>
+            <p class="mb-1">${office.description}</p>
+            <p class="text-gray-700 mb-1"><strong>Location:</strong> ${office.location || 'N/A'}</p>
+            <p class="text-gray-700 mb-1"><strong>Contact:</strong> ${office.contact || 'N/A'}</p>
+            <p class="text-gray-700 mb-1"><strong>Email:</strong> ${office.email || 'N/A'}</p>
+          </div>
+          <div class="mt-4 md:mt-0 md:ml-4 flex flex-row items-center">
+            <button
+              class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
+              onclick="startNavigation(${office.latitude || 0}, ${office.longitude || 0})"
+            >
+              Navigate me there
+            </button>
+          </div>
+        `;
+        resultsContainer.appendChild(card);
+      });
+
+      // Log the query for debugging purposes
+      console.log("Performing search with query:", query);
+
+      // If the user is authenticated, store the search query via AJAX.
+      {% if user.is_authenticated %}
+      fetch("{% url 'store_search' %}", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-CSRFToken": getCookie('csrftoken')
+        },
+        body: new URLSearchParams({
+          "query": query
+        })
+      })
+        .then(response => response.json())
+        .then(data => console.log("Search stored:", data))
+        .catch(error => console.error("Error storing search query:", error));
+      {% else %}
+      console.log("User is not authenticated; search not stored.");
+      {% endif %}
+    }
+
+    // Attach event listener for search button click
+    document.getElementById('searchButton').addEventListener('click', performSearch);
+
+    // Attach event listener for pressing Enter in the search input
+    document.getElementById('searchInput').addEventListener('keydown', function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        performSearch();
+      }
+    });
+
+    // Attach event listeners for quick links (e.g., Transcripts, PG Admissions, Verification, Others, etc.)
+    document.querySelectorAll('.quick-link').forEach(link => {
+      link.addEventListener('click', function (e) {
+        e.preventDefault();
+        // Get the query from the data attribute and set it in the search input
+        const query = this.getAttribute('data-query');
+        document.getElementById('searchInput').value = query;
+        performSearch();
+      });
+    });
+  </script>
+
+
+
+
+  <!-- Load Google Maps JavaScript API (remember to replace YOUR_API_KEY) -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
+</body>
+
+</html>

@@ -1,0 +1,47 @@
+    <!-- scan_qr.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% load static %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scan QR Code</title>
+  <!-- Tailwind CSS (or any other CSS framework) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+  {% include 'navbar.html' %}
+
+  <div class="container mx-auto py-8">
+    <h1 class="text-3xl font-bold mb-4">Scan QR Code</h1>
+    
+    <!-- Display error message if any -->
+    {% if error_message %}
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        {{ error_message }}
+      </div>
+    {% endif %}
+    
+    <!-- Display the decoded QR code link if found -->
+    {% if qr_link %}
+      <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+        QR Code Link: <a href="{{ qr_link }}" class="text-blue-600 hover:underline">{{ qr_link }}</a>
+      </div>
+    {% endif %}
+
+    <!-- Upload Form -->
+    <form method="post" enctype="multipart/form-data" class="bg-white shadow rounded p-6">
+      {% csrf_token %}
+      <div class="mb-4">
+        <label for="qr_image" class="block text-gray-700 font-bold mb-2">
+          Upload QR Code Image:
+        </label>
+        <input type="file" name="qr_image" id="qr_image" accept="image/*" class="border rounded w-full py-2 px-3">
+      </div>
+      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+        Scan QR Code
+      </button>
+    </form>
+  </div>
+</body>
+</html>

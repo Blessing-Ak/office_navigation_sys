@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% load static %}
+  {% load widget_tweaks %}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up - Office Navigation System</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+  {% include 'navbar.html' %}
+  
+  <div class="flex items-center justify-center min-h-screen">
+    <div class="bg-white p-8 rounded shadow-md w-full max-w-md">
+      <h1 class="text-2xl font-bold mb-6 text-center">Sign Up</h1>
+      <h6 class="text-center">Sign up for a smarter, personalized experience! Save favorite locations, see your search history, and enjoy enhanced navigation with real-time tracking.</h6>
+      <br><br>
+      <form method="post">
+        {% csrf_token %}
+        <div class="mb-4">
+          <label for="id_email" class="block text-gray-700 font-medium mb-2">Email</label>
+          {{ form.email|add_class:"border border-gray-300 rounded w-full py-2 px-3" }}
+        </div>
+        <div class="mb-4">
+          <label for="id_phone_number" class="block text-gray-700 font-medium mb-2">Phone Number</label>
+          {{ form.phone_number|add_class:"border border-gray-300 rounded w-full py-2 px-3" }}
+        </div>
+        <div class="mb-4">
+          <label for="id_password" class="block text-gray-700 font-medium mb-2">Password</label>
+          {{ form.password|add_class:"border border-gray-300 rounded w-full py-2 px-3" }}
+        </div>
+        <div class="mb-6">
+          <label for="id_confirm_password" class="block text-gray-700 font-medium mb-2">Confirm Password</label>
+          {{ form.confirm_password|add_class:"border border-gray-300 rounded w-full py-2 px-3" }}
+        </div>
+        {% if form.errors %}
+          <div class="mb-4 text-red-600">
+            {{ form.errors }}
+          </div>
+        {% endif %}
+        <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition duration-200">
+          Sign Up
+        </button>
+      </form>
+      <p class="mt-4 text-center text-sm text-gray-600">
+        Already have an account?
+        <a href="{% url 'login' %}" class="text-blue-600 hover:underline font-medium">Login here</a>.
+      </p>
+    </div>
+  </div>
+</body>
+</html>

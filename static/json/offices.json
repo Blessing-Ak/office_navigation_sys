@@ -1,0 +1,41 @@
+[
+    {
+      "name": "Undergraduate Record Unit (ERA division)",
+      "description": "Statement of result collection",
+      "location": "Ground Floor, Room 7, Adjacent Tekena Tamuno Building",
+      "contact": "08020841489",
+      "email": "record@stu.ui.edu.ng",
+      "image": "images/era_division.png",
+      "longitude": 3.899562,
+      "latitude": 7.444483
+    },
+    {
+      "name": "Postgraduate Admissions Office",
+      "description": "Handles postgraduate admissions and inquiries",
+      "location": "Main Registry Building, 1st Floor, Room 105",
+      "contact": "08031234567",
+      "email": "pgadmissions@ui.edu.ng"
+    },
+    {
+      "name": "Exams & Records Office",
+      "description": "Manages exam schedules, transcripts, and records",
+      "location": "West Wing, 2nd Floor, Room 210",
+      "contact": "08042345678",
+      "email": "examsrecords@ui.edu.ng"
+    },
+    {
+      "name": "Verification Unit",
+      "description": "Handles certificate verification and related inquiries",
+      "location": "East Wing, 3rd Floor, Room 305",
+      "contact": "08053456789",
+      "email": "verification@ui.edu.ng"
+    },
+    {
+      "name": "General Registry Office",
+      "description": "General inquiries and administrative tasks",
+      "location": "Registry Annex, Ground Floor, Room 2",
+      "contact": "08064567890",
+      "email": "registry@ui.edu.ng"
+    }
+  ]
+  
