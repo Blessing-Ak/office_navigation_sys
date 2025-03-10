@@ -10,11 +10,11 @@
 </head>
 <body class="bg-gray-50">
   {% include 'navbar.html' %}
-  
+
   <div class="flex items-center justify-center min-h-screen">
     <div class="bg-white p-8 rounded shadow-md w-full max-w-md">
       <h1 class="text-2xl font-bold mb-6 text-center">Sign Up</h1>
-      <h6 class="text-center">Sign up for a smarter, personalized experience! Save favorite locations, see your search history, and enjoy enhanced navigation with real-time tracking.</h6>
+      <h6 class="text-center">Sign up for a smarter, personalized experience! See your search history, and enjoy enhanced navigation with real-time tracking.</h6>
       <br><br>
       <form method="post">
         {% csrf_token %}
@@ -28,11 +28,27 @@
         </div>
         <div class="mb-4">
           <label for="id_password" class="block text-gray-700 font-medium mb-2">Password</label>
-          {{ form.password|add_class:"border border-gray-300 rounded w-full py-2 px-3" }}
+          <div class="relative">
+            {{ form.password|add_class:"border border-gray-300 rounded w-full py-2 px-3 pr-10" }}
+            <button type="button" class="absolute inset-y-0 right-0 flex items-center pr-3 password-toggle-btn" data-target="id_password">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+              </svg>
+            </button>
+          </div>
         </div>
         <div class="mb-6">
           <label for="id_confirm_password" class="block text-gray-700 font-medium mb-2">Confirm Password</label>
-          {{ form.confirm_password|add_class:"border border-gray-300 rounded w-full py-2 px-3" }}
+          <div class="relative">
+            {{ form.confirm_password|add_class:"border border-gray-300 rounded w-full py-2 px-3 pr-10" }}
+            <button type="button" class="absolute inset-y-0 right-0 flex items-center pr-3 password-toggle-btn" data-target="id_confirm_password">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+              </svg>
+            </button>
+          </div>
         </div>
         {% if form.errors %}
           <div class="mb-4 text-red-600">
@@ -49,5 +65,17 @@
       </p>
     </div>
   </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.password-toggle-btn').forEach(button => {
+        button.addEventListener('click', function() {
+          const targetId = this.getAttribute('data-target');
+          const passwordInput = document.getElementById(targetId);
+          passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+        });
+      });
+    });
+  </script>
 </body>
 </html>
